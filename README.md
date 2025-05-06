@@ -2,6 +2,10 @@
 
 PgFreshCache provides a read-only `DbContext` backed by a local SQLite database, kept in sync with PostgreSQL via logical replication. Data can be queried using standard EF Core queries.
 
+## ⚠️ Development Status
+
+**Bleeding edge** — the library is under active development, and **not tested**.
+
 ### 🔧 1. Add the cache `DbContext` to your service container
 
 In `Program.cs`:
