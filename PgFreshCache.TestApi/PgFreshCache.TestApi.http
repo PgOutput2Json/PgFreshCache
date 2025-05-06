@@ -1,0 +1,6 @@
+@PgFreshCache.TestApi_HostAddress = http://localhost:5122
+
+GET {{PgFreshCache.TestApi_HostAddress}}/products/
+Accept: application/json
+
+###

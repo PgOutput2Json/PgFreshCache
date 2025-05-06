@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PgFreshCache.TestApi", "PgFreshCache.TestApi\PgFreshCache.TestApi.csproj", "{CC917E38-41FB-4B30-B872-BD692E793823}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PgFreshCache.Lite", "PgFreshCache.Lite\PgFreshCache.Lite.csproj", "{C51BCEEA-F36C-4A84-AD75-3F82D3B7A2A7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC917E38-41FB-4B30-B872-BD692E793823}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC917E38-41FB-4B30-B872-BD692E793823}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC917E38-41FB-4B30-B872-BD692E793823}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC917E38-41FB-4B30-B872-BD692E793823}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C51BCEEA-F36C-4A84-AD75-3F82D3B7A2A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C51BCEEA-F36C-4A84-AD75-3F82D3B7A2A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C51BCEEA-F36C-4A84-AD75-3F82D3B7A2A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C51BCEEA-F36C-4A84-AD75-3F82D3B7A2A7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A79E250E-BF58-4DC5-8C20-737811D168A2}
+	EndGlobalSection
+EndGlobal
