@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
-		<Version>0.1.0</Version>
+		<Version>0.1.1</Version>
 		<RepositoryUrl>https://github.com/PgOutput2Json/PgFreshCache</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Authors>PgOutput2Json</Authors>
@@ -14,6 +14,7 @@
 		<Description>PgFreshCache is a caching layer for PostgreSQL that mirrors selected tables into a local SQLite database using logical replication.</Description>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageProjectUrl>https://github.com/PgOutput2Json/PgFreshCache</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -21,6 +22,10 @@
 
 	<ItemGroup>
 		<None Include="icon.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="README.md">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
 		</None>
