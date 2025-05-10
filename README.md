@@ -14,9 +14,17 @@ Alternatively, the library allows providing your own SQLite connection string, e
 
 **Bleeding edge** — the library is under active development, and **not tested**.
 
-## Quick Start (In-Memory)
+This library relies on **[PgOutput2Json](https://github.com/PgOutput2Json/PgOutput2Json)** to receive row changes as compact JSON messages (`WriteMode.Compact`).
 
-### 🔧 1. Add the cache `DbContext` to your service container
+## Quick Start (In-Memory).
+
+### 🔧 1. Install the `PgFreshCache.Lite` package:
+
+```text
+dotnet add package PgFreshCache.Lite
+```
+
+### 🔧 2. Add the cache `DbContext` to your service container
 
 In `Program.cs`:
 
@@ -35,7 +43,7 @@ builder.Services.AddPgFreshCache<StoreDbContext>("cache", options =>
 });
 ```
 
-### 🧪 2. Query data via the cache `DbContext`
+### 🧪 3. Query data via the cache `DbContext`
 
 Inject the context using `[FromKeyedServices]`:
 
@@ -62,7 +70,7 @@ public class ProductsController : ControllerBase
 }
 ```
 
-### 🛠 3. PostgreSQL Setup: Create the publication
+### 🛠 4. PostgreSQL Setup: Create the publication
 
 Make sure your PostgreSQL database is configured for logical replication.
 
