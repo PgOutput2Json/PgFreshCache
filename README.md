@@ -112,7 +112,8 @@ If needed, in `pg_hba.conf`, add an entry:
 host      your_db     pgfresh_user   all             scram-sha-256
 ```
 > Note that the database name is specified because `replication` alone is not enough for the initial data copy, which is done through a regular connection.
-Then reload PostgreSQL:
+
+After changing the `pg_hba.conf` file, reload the PostgreSQL configuration:
 
 ```sql
 SELECT pg_reload_conf();
