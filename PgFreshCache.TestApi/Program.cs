@@ -21,15 +21,17 @@ namespace PgFreshCache.TestApi
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            var pgConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-                ?? throw new Exception("DefaultConnection not configured in connection strings");
-
             builder.Services.AddDbContext<StoreDbContext>(options =>
             {
-                options.UseNpgsql(pgConnectionString);
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            builder.Services.AddPgFreshCache<StoreDbContext>("cache", pgConnectionString, "cache_publication");
+            builder.Services.AddPgFreshCache<StoreDbContext>("cache", options =>
+            {
+                // You could use DefaultConnection too
+                options.UseConnectionString(builder.Configuration.GetConnectionString("ReplicationConnection")) 
+                    .UsePublications("cache_publication");
+            });
 
             var app = builder.Build();
 

@@ -3,7 +3,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using PgFreshCache.Lite;
-using PgOutput2Json.Sqlite;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -11,41 +10,20 @@ public static class IServiceCollectionExtensions
 {
     public static IServiceCollection AddPgFreshCache<TDbContext>(this IServiceCollection services,
                                                                  string cacheKey,
-                                                                 string postgresConnectionString,
-                                                                 string publicationName,
-                                                                 Action<PgFreshCacheOptions>? cacheOptionsAction = null,
-                                                                 Action<DbContextOptionsBuilder>? sqliteOptionsAction = null)
+                                                                 Action<PgFreshCacheOptionsBuilder<TDbContext>>? cacheOptionsAction = null)
         where TDbContext : DbContext
     {
-        var cacheOptions = new PgFreshCacheOptions
-        {
-            PostgresConnectionString = postgresConnectionString,
-            SqliteConnectionString = $"Data Source=PgFreshCache_{cacheKey};Mode=Memory;Cache=Shared;Foreign Keys=False",
-            ReplicationSlotName = $"PgFreshCache_{Guid.NewGuid()}".Replace("-", ""),
-            PublicationNames = [publicationName],
-            UseTemporaryReplicationSlot = true,
+        var optionsBuilder = new PgFreshCacheOptionsBuilder<TDbContext>(cacheKey);
 
-            UseWal = true,
-            WalCheckpointTryCount = 10,
-            WalCheckpointType = WalCheckpointType.Full,
-        };
-
-        cacheOptionsAction?.Invoke(cacheOptions);
-
-        var sqliteOptionsBuilder = new DbContextOptionsBuilder<TDbContext>()
-            .UseSqlite(cacheOptions.SqliteConnectionString)
-            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTrackingWithIdentityResolution)
-            .AddInterceptors(new PgFreshCacheConnectionInterceptor());
-
-        sqliteOptionsAction?.Invoke(sqliteOptionsBuilder);
+        cacheOptionsAction?.Invoke(optionsBuilder);
 
         // register services 
-        services.AddKeyedSingleton(cacheKey, cacheOptions);
+        services.AddKeyedSingleton(cacheKey, optionsBuilder.Options);
 
         services.AddKeyedSingleton<PgFreshCacheAccessor<TDbContext>>(cacheKey);
 
         services.AddKeyedSingleton<IDbContextFactory<TDbContext>>(cacheKey, (svc, key) => 
-            new PgFreshCacheDbContextFactory<TDbContext>(svc, sqliteOptionsBuilder.Options));
+            new PgFreshCacheDbContextFactory<TDbContext>(svc, optionsBuilder.SqliteOptionsBuilder.Options));
 
         // created with factory, so it does not confuse the regular DbContextOptions<TDbContext> with cache DbContext options
         services.AddKeyedScoped(cacheKey, (svc, key) => 

@@ -32,6 +32,18 @@ namespace PgFreshCache.Lite
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            if (string.IsNullOrWhiteSpace(_options.PostgresConnectionString))
+            {
+                _logger.LogError("Missing PostgreSQL connection string for cache replication. Aborting PgFreshCacheStart");
+                return;
+            }
+
+            if (_options.PublicationNames.Count == 0)
+            {
+                _logger.LogError("Missing PostgreSQL publication name for cache replication. Aborting PgFreshCacheStart");
+                return;
+            }
+
             SqliteConnection? memoryConnection = null; // keep the connection open while the app is running
 
             while (!stoppingToken.IsCancellationRequested)
