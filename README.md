@@ -27,6 +27,7 @@ builder.Services.AddDbContext<StoreDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+// Register the cache context, as a keyed service
 builder.Services.AddPgFreshCache<StoreDbContext>("cache", options =>
 {
     options.UseConnectionString(builder.Configuration.GetConnectionString("DefaultConnection")) 
