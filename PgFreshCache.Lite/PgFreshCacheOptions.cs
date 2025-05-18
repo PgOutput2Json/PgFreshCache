@@ -36,7 +36,7 @@ namespace PgFreshCache.Lite
 
                 UseWal = true,
                 WalCheckpointTryCount = 10,
-                WalCheckpointType = WalCheckpointType.Full,
+                WalCheckpointType = WalCheckpointType.Automatic,
             };
 
             SqliteOptionsBuilder = new DbContextOptionsBuilder<TDbContext>()
@@ -57,10 +57,23 @@ namespace PgFreshCache.Lite
             return this;
         }
 
-        public PgFreshCacheOptionsBuilder<TDbContext> WithReplicationSlot(string replicationSlotName, bool useTemporarySlot = false)
+        public PgFreshCacheOptionsBuilder<TDbContext> UseReplicationSlot(string replicationSlotName, bool useTemporarySlot = false)
         {
             Options.ReplicationSlotName = replicationSlotName;
             Options.UseTemporaryReplicationSlot = useTemporarySlot;
+            return this;
+        }
+
+        public PgFreshCacheOptionsBuilder<TDbContext> UseRollbackJournal()
+        {
+            Options.UseWal = false;
+            return this;
+        }
+
+        public PgFreshCacheOptionsBuilder<TDbContext> UseWal(WalCheckpointType walCheckpointType)
+        {
+            Options.UseWal = true;
+            Options.WalCheckpointType = walCheckpointType;
             return this;
         }
 

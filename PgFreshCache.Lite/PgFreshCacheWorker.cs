@@ -60,10 +60,10 @@ namespace PgFreshCache.Lite
                             break;
                         }
 
-                        memoryConnection = await EnsureMemoryConnection(memoryConnection, cnStringBuilder, stoppingToken).ConfigureAwait(false);
+                        memoryConnection = await EnsureMemoryConnectionAsync(memoryConnection, cnStringBuilder, stoppingToken).ConfigureAwait(false);
                     }
 
-                    await EnsureDatabaseCreated(stoppingToken).ConfigureAwait(false);
+                    await EnsureDatabaseCreatedAsync(stoppingToken).ConfigureAwait(false);
 
                     var builder = PgOutput2JsonBuilder.Create()
                         .WithLoggerFactory(_loggerFactory)
@@ -72,7 +72,6 @@ namespace PgFreshCache.Lite
                         .WithPgReplicationSlot(_options.ReplicationSlotName, _options.UseTemporaryReplicationSlot)
                         .WithBatchSize(10_000)
                         .WithInitialDataCopy(true)
-                        .WithIdleFlushTime(1)
                         .UseSqlite(options =>
                         {
                             options.ConnectionStringBuilder = cnStringBuilder;
@@ -85,7 +84,7 @@ namespace PgFreshCache.Lite
 
                     _accessor.SetPgOutput2Json(pgOutput2Json);
 
-                    await pgOutput2Json.Start(stoppingToken).ConfigureAwait(false);
+                    await pgOutput2Json.StartAsync(stoppingToken).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -101,7 +100,7 @@ namespace PgFreshCache.Lite
             memoryConnection?.Dispose();
         }
 
-        private async Task EnsureDatabaseCreated(CancellationToken stoppingToken)
+        private async Task EnsureDatabaseCreatedAsync(CancellationToken stoppingToken)
         {
             using var db = _dbContextFactory.CreateDbContext();
 
@@ -114,7 +113,7 @@ namespace PgFreshCache.Lite
             await db.Database.EnsureCreatedAsync(stoppingToken).ConfigureAwait(false);
         }
 
-        private static async Task<SqliteConnection?> EnsureMemoryConnection(SqliteConnection? memoryConnection, SqliteConnectionStringBuilder cnStringBuilder, CancellationToken stoppingToken)
+        private static async Task<SqliteConnection?> EnsureMemoryConnectionAsync(SqliteConnection? memoryConnection, SqliteConnectionStringBuilder cnStringBuilder, CancellationToken stoppingToken)
         {
             memoryConnection ??= new SqliteConnection(cnStringBuilder.ConnectionString);
 

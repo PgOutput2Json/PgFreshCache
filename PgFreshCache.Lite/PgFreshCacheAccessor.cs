@@ -10,9 +10,9 @@ namespace PgFreshCache.Lite
         {
         }
 
-        public async Task<bool> WhenLsnReaches(string expectedLsn, TimeSpan timeout, CancellationToken cancellationToken)
+        public async Task<bool> WhenLsnReachesAsync(string expectedLsn, TimeSpan timeout, CancellationToken cancellationToken)
         {
-            return _pg2j != null && await _pg2j.WhenLsnReaches(expectedLsn, timeout, cancellationToken);
+            return _pg2j != null && await _pg2j.WhenLsnReachesAsync(expectedLsn, timeout, cancellationToken).ConfigureAwait(false);
         }
 
         internal void SetPgOutput2Json(IPgOutput2Json pg2j)
