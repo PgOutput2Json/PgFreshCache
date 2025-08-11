@@ -12,19 +12,16 @@ namespace PgFreshCache.Lite
         where TDbContext: DbContext
     {
         private readonly PgFreshCacheOptions _options;
-        private readonly PgFreshCacheAccessor<TDbContext> _accessor;
         private readonly IDbContextFactory<TDbContext> _dbContextFactory;
         private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger<PgFreshCacheWorker<TDbContext>> _logger;
 
         public PgFreshCacheWorker(PgFreshCacheOptions options,
-                                  PgFreshCacheAccessor<TDbContext> accessor,
                                   IDbContextFactory<TDbContext> dbContextFactory,
                                   ILoggerFactory loggerFactory,
                                   ILogger<PgFreshCacheWorker<TDbContext>> logger)
         {
             _options = options;
-            _accessor = accessor;
             _dbContextFactory = dbContextFactory;
             _loggerFactory = loggerFactory;
             _logger = logger;
@@ -81,8 +78,6 @@ namespace PgFreshCache.Lite
                         });
 
                     using var pgOutput2Json = builder.Build();
-
-                    _accessor.SetPgOutput2Json(pgOutput2Json);
 
                     await pgOutput2Json.StartAsync(stoppingToken).ConfigureAwait(false);
                 }

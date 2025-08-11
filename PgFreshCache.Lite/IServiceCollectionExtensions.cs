@@ -20,8 +20,6 @@ public static class IServiceCollectionExtensions
         // register services 
         services.AddKeyedSingleton(cacheKey, optionsBuilder.Options);
 
-        services.AddKeyedSingleton<PgFreshCacheAccessor<TDbContext>>(cacheKey);
-
         services.AddKeyedSingleton<IDbContextFactory<TDbContext>>(cacheKey, (svc, key) => 
             new PgFreshCacheDbContextFactory<TDbContext>(svc, optionsBuilder.SqliteOptionsBuilder.Options));
 
@@ -35,7 +33,6 @@ public static class IServiceCollectionExtensions
         {
             return new PgFreshCacheWorker<TDbContext>(
                 svc.GetRequiredKeyedService<PgFreshCacheOptions>(cacheKey),
-                svc.GetRequiredKeyedService<PgFreshCacheAccessor<TDbContext>>(cacheKey),
                 svc.GetRequiredKeyedService<IDbContextFactory<TDbContext>>(cacheKey), 
                 svc.GetRequiredService<ILoggerFactory>(),
                 svc.GetRequiredService<ILogger<PgFreshCacheWorker<TDbContext>>>()
