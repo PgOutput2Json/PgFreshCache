@@ -23,7 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<PackageReference Include="PgFreshCache.Lite" Version="1.4.0" />
+		<PackageReference Include="PgFreshCache.Lite" Version="1.4.1" />
     </ItemGroup>
 
 </Project>
