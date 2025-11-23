@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
-		<Version>1.4.0</Version>
+		<Version>1.4.1</Version>
 		<RepositoryUrl>https://github.com/PgOutput2Json/PgFreshCache</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Authors>PgOutput2Json</Authors>
@@ -41,7 +41,7 @@
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.22" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.11" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
