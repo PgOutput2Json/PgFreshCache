@@ -97,7 +97,7 @@ namespace PgFreshCache.Lite
 
         private async Task EnsureDatabaseCreatedAsync(CancellationToken stoppingToken)
         {
-            using var db = _dbContextFactory.CreateDbContext();
+            using var db = await _dbContextFactory.CreateDbContextAsync(stoppingToken).ConfigureAwait(false);
 
             using var connection = new SqliteConnection(_options.SqliteConnectionString);
             
