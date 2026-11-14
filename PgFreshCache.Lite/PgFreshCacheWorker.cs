@@ -62,6 +62,11 @@ namespace PgFreshCache.Lite
 
                     await EnsureDatabaseCreatedAsync(stoppingToken).ConfigureAwait(false);
 
+                    // The cache DbContext sets PRAGMA query_only on the connections it opens, and pooled connections keep it.
+                    // With the same connection string, the writer could get such a connection from the pool and fail with
+                    // "attempt to write a readonly database" (file databases; in-memory ones are not pooled).
+                    cnStringBuilder.Pooling = false;
+
                     var builder = PgOutput2JsonBuilder.Create()
                         .WithLoggerFactory(_loggerFactory)
                         .WithPgConnectionString(_options.PostgresConnectionString)
