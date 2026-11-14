@@ -39,6 +39,10 @@
 		<PackageReference Include="PgOutput2Json.Sqlite" Version="2.0.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="PgFreshCache.Tests" />
+	</ItemGroup>
+
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.20" />
