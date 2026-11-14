@@ -1,0 +1,49 @@
+# Builds the solution and runs the unit and the integration tests on every pull request and on main.
+# The integration tests start PostgreSQL with Testcontainers, on the runner's Docker (PG_IMAGE picks the image).
+# The test projects target net8.0 (the library on EF Core 9) and net10.0 (EF Core 10); dotnet test runs both.
+# A change of only the docs (*.md), the license or .gitignore does not run them.
+name: Tests
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - 'LICENSE'
+      - '.gitignore'
+  pull_request:
+    paths-ignore:
+      - '**/*.md'
+      - 'LICENSE'
+      - '.gitignore'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# a newer push to the same branch or pull request replaces the run in progress
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Build
+        run: dotnet build PgFreshCache.sln --configuration Release
+
+      - name: Unit tests
+        run: dotnet test PgFreshCache.Tests/PgFreshCache.Tests.csproj --configuration Release --no-build --logger "console;verbosity=normal"
+
+      - name: Integration tests
+        run: dotnet test PgFreshCache.IntegrationTests/PgFreshCache.IntegrationTests.csproj --configuration Release --no-build --logger "console;verbosity=normal"
