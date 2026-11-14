@@ -77,8 +77,12 @@ namespace PgFreshCache.Lite
             return this;
         }
 
-        public PgFreshCacheOptionsBuilder<TDbContext> UseSqlite(string sqliteConnectionString, Action<SqliteDbContextOptionsBuilder>? sqliteOptionsAction)
+        public PgFreshCacheOptionsBuilder<TDbContext> UseSqlite(string sqliteConnectionString, Action<SqliteDbContextOptionsBuilder>? sqliteOptionsAction = null)
         {
+            ArgumentException.ThrowIfNullOrWhiteSpace(sqliteConnectionString);
+
+            // the worker writes to this connection string, the DbContext reads from the one below - they must be the same
+            Options.SqliteConnectionString = sqliteConnectionString;
             SqliteOptionsBuilder.UseSqlite(sqliteConnectionString, sqliteOptionsAction);
             return this;
         }
