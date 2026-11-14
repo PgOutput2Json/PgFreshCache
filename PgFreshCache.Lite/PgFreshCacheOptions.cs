@@ -36,7 +36,7 @@ namespace PgFreshCache.Lite
             {
                 PostgresConnectionString = string.Empty,
                 SqliteConnectionString = $"Data Source=PgFreshCache_{cacheKey};Mode=Memory;Cache=Shared;Foreign Keys=False",
-                ReplicationSlotName = $"PgFreshCache_{Guid.NewGuid()}".Replace("-", ""),
+                ReplicationSlotName = $"pgfreshcache_{Guid.NewGuid():N}", // slot names may only contain lower case letters, numbers and underscores
                 PublicationNames = ["cache_publication"],
                 UseTemporaryReplicationSlot = true,
 
