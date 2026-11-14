@@ -31,13 +31,13 @@ namespace PgFreshCache.Lite
         {
             if (string.IsNullOrWhiteSpace(_options.PostgresConnectionString))
             {
-                _logger.LogError("Missing PostgreSQL connection string for cache replication. Aborting PgFreshCacheStart");
+                _logger.LogError("Missing PostgreSQL connection string for cache replication. Aborting PgFreshCache start");
                 return;
             }
 
             if (_options.PublicationNames.Count == 0)
             {
-                _logger.LogError("Missing PostgreSQL publication name for cache replication. Aborting PgFreshCacheStart");
+                _logger.LogError("Missing PostgreSQL publication name for cache replication. Aborting PgFreshCache start");
                 return;
             }
 
@@ -49,11 +49,11 @@ namespace PgFreshCache.Lite
                 {
                     var cnStringBuilder = new SqliteConnectionStringBuilder(_options.SqliteConnectionString);
 
-                    if (IsMemoryConection(cnStringBuilder))
+                    if (PgFreshCacheOptions.IsMemoryConnection(cnStringBuilder))
                     {
                         if (cnStringBuilder.Cache != SqliteCacheMode.Shared)
                         {
-                            _logger.LogError("In-Memory Sqlite database is not confgured with shared cache. Aborting PgFreshCache start");
+                            _logger.LogError("In-Memory Sqlite database is not configured with shared cache. Aborting PgFreshCache start");
                             break;
                         }
 
@@ -87,7 +87,8 @@ namespace PgFreshCache.Lite
                     {
                         _logger.LogError(ex, "Failed to start PgFreshCache worker. Retrying in 10 seconds...");
 
-                        await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken).ConfigureAwait(false);
+                        // don't throw on shutdown, so the loop exits normally and the memory connection gets disposed
+                        await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken).ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing);
                     }
                 }
             }
@@ -118,11 +119,6 @@ namespace PgFreshCache.Lite
             }
 
             return memoryConnection;
-        }
-
-        private static bool IsMemoryConection(SqliteConnectionStringBuilder cnStringBuilder)
-        {
-            return cnStringBuilder.Mode == SqliteOpenMode.Memory || (cnStringBuilder.DataSource != null && cnStringBuilder.DataSource.Contains(":memory:"));
         }
     }
 }

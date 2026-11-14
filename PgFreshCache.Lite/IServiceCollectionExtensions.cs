@@ -17,6 +17,8 @@ public static class IServiceCollectionExtensions
 
         cacheOptionsAction?.Invoke(optionsBuilder);
 
+        optionsBuilder.Validate();
+
         // register services 
         services.AddKeyedSingleton(cacheKey, optionsBuilder.Options);
 

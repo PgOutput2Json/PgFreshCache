@@ -16,7 +16,7 @@ namespace PgFreshCache.TestApi.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("DROP IF EXISTS SCHEMA pgoutput2json");
+            migrationBuilder.Sql("DROP SCHEMA IF EXISTS pgoutput2json");
         }
     }
 }
