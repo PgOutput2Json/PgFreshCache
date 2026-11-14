@@ -87,7 +87,8 @@ namespace PgFreshCache.Lite
                     {
                         _logger.LogError(ex, "Failed to start PgFreshCache worker. Retrying in 10 seconds...");
 
-                        await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken).ConfigureAwait(false);
+                        // don't throw on shutdown, so the loop exits normally and the memory connection gets disposed
+                        await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken).ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing);
                     }
                 }
             }
