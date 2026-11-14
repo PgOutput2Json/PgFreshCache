@@ -49,7 +49,7 @@ namespace PgFreshCache.Lite
                 {
                     var cnStringBuilder = new SqliteConnectionStringBuilder(_options.SqliteConnectionString);
 
-                    if (IsMemoryConection(cnStringBuilder))
+                    if (PgFreshCacheOptions.IsMemoryConnection(cnStringBuilder))
                     {
                         if (cnStringBuilder.Cache != SqliteCacheMode.Shared)
                         {
@@ -118,11 +118,6 @@ namespace PgFreshCache.Lite
             }
 
             return memoryConnection;
-        }
-
-        private static bool IsMemoryConection(SqliteConnectionStringBuilder cnStringBuilder)
-        {
-            return cnStringBuilder.Mode == SqliteOpenMode.Memory || (cnStringBuilder.DataSource != null && cnStringBuilder.DataSource.Contains(":memory:"));
         }
     }
 }

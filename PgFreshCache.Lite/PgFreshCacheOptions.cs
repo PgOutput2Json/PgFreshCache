@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using PgOutput2Json.Sqlite;
 
@@ -17,6 +18,11 @@ namespace PgFreshCache.Lite
         public required bool UseWal { get; set; }
         public required int WalCheckpointTryCount { get; set; }
         public required WalCheckpointType WalCheckpointType { get; set; }
+
+        internal static bool IsMemoryConnection(SqliteConnectionStringBuilder cnStringBuilder)
+        {
+            return cnStringBuilder.Mode == SqliteOpenMode.Memory || (cnStringBuilder.DataSource != null && cnStringBuilder.DataSource.Contains(":memory:"));
+        }
     }
 
     public sealed class PgFreshCacheOptionsBuilder<TDbContext> where TDbContext : DbContext
@@ -85,6 +91,19 @@ namespace PgFreshCache.Lite
             Options.SqliteConnectionString = sqliteConnectionString;
             SqliteOptionsBuilder.UseSqlite(sqliteConnectionString, sqliteOptionsAction);
             return this;
+        }
+
+        internal void Validate()
+        {
+            // The table copy state of a permanent slot is kept in PostgreSQL, so after a restart the tables are
+            // considered copied and only new changes are streamed - an in-memory database would stay (partly) empty.
+            if (!Options.UseTemporaryReplicationSlot
+                && PgFreshCacheOptions.IsMemoryConnection(new SqliteConnectionStringBuilder(Options.SqliteConnectionString)))
+            {
+                throw new InvalidOperationException(
+                    $"Permanent replication slot '{Options.ReplicationSlotName}' cannot be used with an in-memory Sqlite database. " +
+                    "Use a temporary replication slot, or a file-based Sqlite database (UseSqlite).");
+            }
         }
     }
 }
