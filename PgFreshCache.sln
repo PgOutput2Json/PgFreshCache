@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PgFreshCache.Lite", "PgFres
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PgFreshCache.Tests", "PgFreshCache.Tests\PgFreshCache.Tests.csproj", "{5E6045AF-6D68-4A76-8DC5-59E9AC364234}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PgFreshCache.IntegrationTests", "PgFreshCache.IntegrationTests\PgFreshCache.IntegrationTests.csproj", "{1133E93A-9BB4-4564-9557-BF0E9D66FB54}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{5E6045AF-6D68-4A76-8DC5-59E9AC364234}.Release|x64.Build.0 = Release|Any CPU
 		{5E6045AF-6D68-4A76-8DC5-59E9AC364234}.Release|x86.ActiveCfg = Release|Any CPU
 		{5E6045AF-6D68-4A76-8DC5-59E9AC364234}.Release|x86.Build.0 = Release|Any CPU
+		{1133E93A-9BB4-4564-9557-BF0E9D66FB54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1133E93A-9BB4-4564-9557-BF0E9D66FB54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1133E93A-9BB4-4564-9557-BF0E9D66FB54}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1133E93A-9BB4-4564-9557-BF0E9D66FB54}.Debug|x64.Build.0 = Debug|Any CPU
+		{1133E93A-9BB4-4564-9557-BF0E9D66FB54}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1133E93A-9BB4-4564-9557-BF0E9D66FB54}.Debug|x86.Build.0 = Debug|Any CPU
+		{1133E93A-9BB4-4564-9557-BF0E9D66FB54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1133E93A-9BB4-4564-9557-BF0E9D66FB54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1133E93A-9BB4-4564-9557-BF0E9D66FB54}.Release|x64.ActiveCfg = Release|Any CPU
+		{1133E93A-9BB4-4564-9557-BF0E9D66FB54}.Release|x64.Build.0 = Release|Any CPU
+		{1133E93A-9BB4-4564-9557-BF0E9D66FB54}.Release|x86.ActiveCfg = Release|Any CPU
+		{1133E93A-9BB4-4564-9557-BF0E9D66FB54}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
