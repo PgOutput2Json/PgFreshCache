@@ -31,13 +31,13 @@ namespace PgFreshCache.Lite
         {
             if (string.IsNullOrWhiteSpace(_options.PostgresConnectionString))
             {
-                _logger.LogError("Missing PostgreSQL connection string for cache replication. Aborting PgFreshCacheStart");
+                _logger.LogError("Missing PostgreSQL connection string for cache replication. Aborting PgFreshCache start");
                 return;
             }
 
             if (_options.PublicationNames.Count == 0)
             {
-                _logger.LogError("Missing PostgreSQL publication name for cache replication. Aborting PgFreshCacheStart");
+                _logger.LogError("Missing PostgreSQL publication name for cache replication. Aborting PgFreshCache start");
                 return;
             }
 
@@ -53,7 +53,7 @@ namespace PgFreshCache.Lite
                     {
                         if (cnStringBuilder.Cache != SqliteCacheMode.Shared)
                         {
-                            _logger.LogError("In-Memory Sqlite database is not confgured with shared cache. Aborting PgFreshCache start");
+                            _logger.LogError("In-Memory Sqlite database is not configured with shared cache. Aborting PgFreshCache start");
                             break;
                         }
 
