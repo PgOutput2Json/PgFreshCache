@@ -61,9 +61,11 @@ namespace PgFreshCache.Lite
                 }
             }
 
-            var factory = ActivatorUtilities.CreateFactory(typeof(TDbContext), Type.EmptyTypes);
+            // the cache options must be passed explicitly - resolving DbContextOptions<TDbContext> from DI
+            // would return the application's regular (e.g. Npgsql) options instead of the Sqlite cache ones
+            var factory = ActivatorUtilities.CreateFactory(typeof(TDbContext), [typeof(DbContextOptions<TDbContext>)]);
 
-            return (p, _) => (TDbContext)factory(p, null);
+            return (p, options) => (TDbContext)factory(p, [options]);
         }
     }
 }
