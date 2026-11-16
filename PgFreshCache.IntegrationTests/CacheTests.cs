@@ -56,8 +56,8 @@ namespace PgFreshCache.IntegrationTests
             Assert.AreEqual(0.01m, rows[1].Price);
             Assert.AreEqual(new DateTimeOffset(2026, 1, 2, 1, 4, 5, TimeSpan.Zero).AddTicks(1234560), rows[0].CreatedAt);
             Assert.AreEqual(new DateTimeOffset(2026, 6, 30, 23, 59, 59, TimeSpan.Zero), rows[1].CreatedAt);
-            Assert.AreEqual(new DateTime(2026, 1, 2, 3, 4, 5).AddTicks(1234560), rows[0].LocalAt);
-            Assert.AreEqual(new DateTime(2026, 6, 30, 23, 59, 59), rows[1].LocalAt);
+            Assert.AreEqual(new DateTime(2026, 1, 2, 3, 4, 5).AddTicks(1234560), rows[0].LocalAt.ToLocalTime());
+            Assert.AreEqual(new DateTime(2026, 6, 30, 23, 59, 59), rows[1].LocalAt.ToLocalTime());
             Assert.IsTrue(rows[0].Active);
             Assert.IsFalse(rows[1].Active);
             Assert.AreEqual("a note", rows[0].Note);
