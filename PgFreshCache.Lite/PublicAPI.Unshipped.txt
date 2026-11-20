@@ -1,3 +1,1 @@
 #nullable enable
-*REMOVED*PgFreshCache.Lite.PgFreshCacheOptionsBuilder<TDbContext>.UseSqlite(string! sqliteConnectionString, System.Action<Microsoft.EntityFrameworkCore.Infrastructure.SqliteDbContextOptionsBuilder!>? sqliteOptionsAction) -> PgFreshCache.Lite.PgFreshCacheOptionsBuilder<TDbContext!>!
-PgFreshCache.Lite.PgFreshCacheOptionsBuilder<TDbContext>.UseSqlite(string! sqliteConnectionString, System.Action<Microsoft.EntityFrameworkCore.Infrastructure.SqliteDbContextOptionsBuilder!>? sqliteOptionsAction = null) -> PgFreshCache.Lite.PgFreshCacheOptionsBuilder<TDbContext!>!

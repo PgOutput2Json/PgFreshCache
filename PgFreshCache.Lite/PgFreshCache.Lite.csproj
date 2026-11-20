@@ -29,9 +29,9 @@
 		<!-- the package is compared with a release on nuget.org when it is built, and its target frameworks with each other:
 		     an API removed or changed, or a target framework dropped, fails the build unless it is listed in
 		     CompatibilitySuppressions.xml, on purpose. The baseline is the last minor or major release on nuget.org
-		     (x.y.0; 2.0.0-rc.1 until the next one is out): patch releases do not move it -->
+		     (x.y.0): patch releases do not move it -->
 		<EnablePackageValidation>true</EnablePackageValidation>
-		<PackageValidationBaselineVersion>2.0.0-rc.1</PackageValidationBaselineVersion>
+		<PackageValidationBaselineVersion>2.1.0</PackageValidationBaselineVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
