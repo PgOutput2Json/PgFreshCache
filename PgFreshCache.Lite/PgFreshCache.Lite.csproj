@@ -18,6 +18,20 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+		<!-- symbols with Source Link (in the SDK): a debugger steps into the source of the commit built -->
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+		<!-- deterministic, with the paths normalized: the same commit builds the same assembly on any machine -->
+		<ContinuousIntegrationBuild Condition="'$(Configuration)' == 'Release'">true</ContinuousIntegrationBuild>
+
+		<!-- the package is compared with a release on nuget.org when it is built, and its target frameworks with each other:
+		     an API removed or changed, or a target framework dropped, fails the build unless it is listed in
+		     CompatibilitySuppressions.xml, on purpose. The baseline is the last minor or major release on nuget.org
+		     (x.y.0; 2.0.0-rc.1 until the next one is out): patch releases do not move it -->
+		<EnablePackageValidation>true</EnablePackageValidation>
+		<PackageValidationBaselineVersion>2.0.0-rc.1</PackageValidationBaselineVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -35,6 +49,12 @@
 		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="18.12.1">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<!-- the public API, listed in PublicAPI.Shipped.txt (released) and PublicAPI.Unshipped.txt (since the last release):
+		     a change to it fails the build until the lists are updated, so it shows in the pull request -->
+		<PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="5.6.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="PgOutput2Json.Sqlite" Version="2.1.1" />
 	</ItemGroup>
