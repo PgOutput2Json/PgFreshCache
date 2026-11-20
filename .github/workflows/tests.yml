@@ -47,3 +47,9 @@ jobs:
 
       - name: Integration tests
         run: dotnet test PgFreshCache.IntegrationTests/PgFreshCache.IntegrationTests.csproj --configuration Release --no-build --logger "console;verbosity=normal"
+
+      # the runners are on UTC, which hides values shifted by the local time zone (summer time included)
+      - name: Integration tests (TZ=Europe/Zagreb)
+        env:
+          TZ: Europe/Zagreb
+        run: dotnet test PgFreshCache.IntegrationTests/PgFreshCache.IntegrationTests.csproj --configuration Release --no-build --logger "console;verbosity=normal"

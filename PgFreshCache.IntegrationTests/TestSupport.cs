@@ -137,17 +137,10 @@ namespace PgFreshCache.IntegrationTests
             _workers = sp.GetServices<IHostedService>().ToList();
         }
 
-        // PgOutput2Json sets Npgsql's process-wide logger factory (NpgsqlLoggingConfiguration.InitializeLogging) to the
-        // one it is given, so it must outlive every app of the test run - an app must not dispose it
-        private static readonly ILoggerFactory SharedLoggerFactory = LoggerFactory.Create(b => b
-            .AddSimpleConsole(o => o.SingleLine = true)
-            .SetMinimumLevel(LogLevel.Warning));
-
         public static async Task<CacheApp> StartAsync(Action<IServiceCollection> configure)
         {
             var services = new ServiceCollection();
-            services.AddLogging();
-            services.AddSingleton(SharedLoggerFactory); // registered as an instance, so the provider does not dispose it
+            services.AddLogging(b => b.AddSimpleConsole(o => o.SingleLine = true).SetMinimumLevel(LogLevel.Warning));
 
             configure(services);
 
