@@ -13,7 +13,7 @@ With a temporary slot (the default), every table is copied again on every start 
 
 ## ⚠️ Development Status
 
-Under active development. Unit and integration tests run in CI on every pull request, on .NET 8 (EF Core 9) and .NET 10 (EF Core 10).
+Under active development. Unit and integration tests run in CI on every pull request, on .NET 8 (EF Core 9), .NET 10 (EF Core 10) and .NET 11 (EF Core 11).
 
 This library relies on **[PgOutput2Json](https://github.com/PgOutput2Json/PgOutput2Json)** (`PgOutput2Json.Sqlite`) to receive the row changes and write them to SQLite.
 
