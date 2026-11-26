@@ -36,6 +36,6 @@ PgFreshCache does (the DI registration, the cache `DbContext`, the options, the 
 - Package validation (`EnablePackageValidation`): the package is compared with `PackageValidationBaselineVersion` (a release on
   nuget.org, downloaded once) and between its target frameworks. A removed or changed API fails the Release build (CP0002 etc.)
   unless it is in `PgFreshCache.Lite/CompatibilitySuppressions.xml` (generate it with `-p:ApiCompatGenerateSuppressionFile=true`,
-  only for an intended break). The baseline is the last minor or major release (x.y.0), `2.1.0` for now: patch releases do
+  only for an intended break). The baseline is the last minor or major release (x.y.0), `2.2.0` for now: patch releases do
   not move it. When a minor or major release is on nuget.org, it becomes the baseline, the suppressions are deleted, and
   `PublicAPI.Unshipped.txt` moves into `PublicAPI.Shipped.txt` (the `*REMOVED*` entries delete their shipped lines).
