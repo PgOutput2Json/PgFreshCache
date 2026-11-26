@@ -31,10 +31,21 @@ namespace PgFreshCache.IntegrationTests
         [Column("name")] public string Name { get; set; } = "";
     }
 
+    /// <summary>
+    /// A table of another schema than public: SQLite has no schemas, so in the cache it is the table "orders".
+    /// </summary>
+    [Table("orders", Schema = "sales")]
+    public class Order
+    {
+        [Column("id")] public int Id { get; set; }
+        [Column("customer")] public string Customer { get; set; } = "";
+    }
+
     public class CacheContext(DbContextOptions<CacheContext> options) : DbContext(options)
     {
         public DbSet<Product> Products => Set<Product>();
         public DbSet<Category> Categories => Set<Category>();
+        public DbSet<Order> Orders => Set<Order>();
     }
 
     /// <summary>
@@ -70,7 +81,7 @@ namespace PgFreshCache.IntegrationTests
     }
 
     /// <summary>
-    /// A fresh database with the products and categories tables.
+    /// A fresh database with the products and categories tables, and sales.orders.
     /// </summary>
     internal sealed class TestDatabase
     {
@@ -104,7 +115,10 @@ namespace PgFreshCache.IntegrationTests
                     active boolean NOT NULL,
                     note text NULL);
 
-                CREATE TABLE categories (id int PRIMARY KEY, name text NOT NULL);");
+                CREATE TABLE categories (id int PRIMARY KEY, name text NOT NULL);
+
+                CREATE SCHEMA sales;
+                CREATE TABLE sales.orders (id int PRIMARY KEY, customer text NOT NULL);");
 
             return db;
         }

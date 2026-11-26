@@ -68,13 +68,7 @@ namespace PgFreshCache.Lite
                         .WithPgPublications([.. _options.PublicationNames])
                         .WithPgReplicationSlot(_options.ReplicationSlotName, _options.UseTemporaryReplicationSlot)
                         .WithInitialDataCopy(true)
-                        .UseSqlite(options =>
-                        {
-                            options.ConnectionStringBuilder = cnStringBuilder;
-                            options.UseWal = _options.UseWal;
-                            options.WalCheckpointTryCount = _options.WalCheckpointTryCount;
-                            options.WalCheckpointType = _options.WalCheckpointType;
-                        });
+                        .UseSqlite(options => ConfigureSqlite(options, _options, cnStringBuilder));
 
                     using var pgOutput2Json = builder.Build();
 
@@ -93,6 +87,22 @@ namespace PgFreshCache.Lite
             }
 
             memoryConnection?.Dispose();
+        }
+
+        internal static void ConfigureSqlite(SqlitePublisherOptions options, PgFreshCacheOptions cacheOptions, SqliteConnectionStringBuilder cnStringBuilder)
+        {
+            options.ConnectionStringBuilder = cnStringBuilder;
+            options.UseWal = cacheOptions.UseWal;
+            options.WalCheckpointTryCount = cacheOptions.WalCheckpointTryCount;
+            options.WalCheckpointType = cacheOptions.WalCheckpointType;
+
+            // the store keeps its position under this name: a cache has one source and one slot
+            options.SubscriptionName = cacheOptions.ReplicationSlotName;
+
+            // the tables are created from the DbContext model (EnsureCreated), and SQLite has no schemas: the EF provider
+            // ignores the schema of an entity, so its table is the table name alone, and the rows must go there.
+            // Two published tables with the same name in different schemas are an error of PgOutput2Json
+            options.GetTableName = (schemaName, tableName) => tableName;
         }
 
         private async Task EnsureDatabaseCreatedAsync(CancellationToken stoppingToken)

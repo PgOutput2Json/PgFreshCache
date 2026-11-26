@@ -122,6 +122,25 @@ namespace PgFreshCache.IntegrationTests
         }
 
         [TestMethod]
+        public async Task Table_of_another_schema_is_cached_under_its_name()
+        {
+            var db = await TestDatabase.CreateAsync();
+            await db.ExecuteAsync(@"
+                INSERT INTO sales.orders VALUES (1, 'first');
+                CREATE PUBLICATION cache_publication FOR TABLE sales.orders;");
+
+            var key = NewKey();
+            await using var app = await CacheApp.StartAsync(key, o => o.UseConnectionString(db.ConnectionString));
+
+            await app.WaitForAsync(key, c => c.Orders.Select(o => o.Customer).ToListAsync(), r => r.SequenceEqual(["first"]), "the initial copy");
+
+            await db.ExecuteAsync("INSERT INTO sales.orders VALUES (2, 'second')");
+
+            await app.WaitForAsync(key, c => c.Orders.OrderBy(o => o.Id).Select(o => o.Customer).ToListAsync(),
+                r => r.SequenceEqual(["first", "second"]), "the streamed insert");
+        }
+
+        [TestMethod]
         public async Task Restarted_in_memory_cache_is_copied_again()
         {
             var db = await TestDatabase.CreateAsync();
