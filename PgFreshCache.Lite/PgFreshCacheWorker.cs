@@ -47,7 +47,10 @@ namespace PgFreshCache.Lite
             {
                 try
                 {
-                    var cnStringBuilder = new SqliteConnectionStringBuilder(_options.SqliteConnectionString);
+                    // the connections that write (EnsureCreated, PgOutput2Json, and the one that keeps an in-memory database) are
+                    // not pooled: the cache DbContext makes its connections read-only (PRAGMA query_only), and a pooled one,
+                    // opened by a query before the worker started, would be reused here and fail every write
+                    var cnStringBuilder = new SqliteConnectionStringBuilder(_options.SqliteConnectionString) { Pooling = false };
 
                     if (PgFreshCacheOptions.IsMemoryConnection(cnStringBuilder))
                     {
@@ -60,7 +63,7 @@ namespace PgFreshCache.Lite
                         memoryConnection = await EnsureMemoryConnectionAsync(memoryConnection, cnStringBuilder, stoppingToken).ConfigureAwait(false);
                     }
 
-                    await EnsureDatabaseCreatedAsync(stoppingToken).ConfigureAwait(false);
+                    await EnsureDatabaseCreatedAsync(cnStringBuilder, stoppingToken).ConfigureAwait(false);
 
                     var builder = PgOutput2JsonBuilder.Create()
                         .WithLoggerFactory(_loggerFactory)
@@ -105,11 +108,11 @@ namespace PgFreshCache.Lite
             options.GetTableName = (schemaName, tableName) => tableName;
         }
 
-        private async Task EnsureDatabaseCreatedAsync(CancellationToken stoppingToken)
+        private async Task EnsureDatabaseCreatedAsync(SqliteConnectionStringBuilder cnStringBuilder, CancellationToken stoppingToken)
         {
             using var db = await _dbContextFactory.CreateDbContextAsync(stoppingToken).ConfigureAwait(false);
 
-            using var connection = new SqliteConnection(_options.SqliteConnectionString);
+            using var connection = new SqliteConnection(cnStringBuilder.ConnectionString);
             
             await connection.OpenAsync(stoppingToken).ConfigureAwait(false);
 
