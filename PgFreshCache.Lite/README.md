@@ -83,6 +83,10 @@ CREATE PUBLICATION cache_publication
 
 > The publication name (`cache_publication`) must match the one passed to `AddPgFreshCache`.
 
+SQLite has no schemas: a table is cached under its name alone (`sales.orders` is the SQLite table `orders`), the same name the
+SQLite provider of EF Core gives an entity mapped to it (it ignores the schema). So a publication cannot have two tables with the
+same name in different schemas: the replication logs an error naming both, and retries until one of them is removed from it.
+
 ### 💾 File-Based Cache with a Permanent Slot
 
 For large tables, or to avoid a full copy on every start, keep the cache in a file and use a permanent replication slot. After a restart, the cache continues from where it stopped.

@@ -13,7 +13,7 @@ With a temporary slot (the default), every table is copied again on every start 
 
 ## ⚠️ Development Status
 
-Under active development. Unit and integration tests run in CI on every pull request, on .NET 8 (EF Core 9) and .NET 10 (EF Core 10).
+Under active development. Unit and integration tests run in CI on every pull request, on .NET 8 (EF Core 9), .NET 10 (EF Core 10) and .NET 11 (EF Core 11).
 
 This library relies on **[PgOutput2Json](https://github.com/PgOutput2Json/PgOutput2Json)** (`PgOutput2Json.Sqlite`) to receive the row changes and write them to SQLite.
 
@@ -87,6 +87,10 @@ CREATE PUBLICATION cache_publication
 ```
 
 > The publication name (`cache_publication`) must match the one passed to `AddPgFreshCache`.
+
+SQLite has no schemas: a table is cached under its name alone (`sales.orders` is the SQLite table `orders`), the same name the
+SQLite provider of EF Core gives an entity mapped to it (it ignores the schema). So a publication cannot have two tables with the
+same name in different schemas: the replication logs an error naming both, and retries until one of them is removed from it.
 
 ### 💾 File-Based Cache with a Permanent Slot
 

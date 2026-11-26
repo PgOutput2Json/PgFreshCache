@@ -47,7 +47,10 @@ namespace PgFreshCache.Lite
             {
                 try
                 {
-                    var cnStringBuilder = new SqliteConnectionStringBuilder(_options.SqliteConnectionString);
+                    // the connections that write (EnsureCreated, PgOutput2Json, and the one that keeps an in-memory database) are
+                    // not pooled: the cache DbContext makes its connections read-only (PRAGMA query_only), and a pooled one,
+                    // opened by a query before the worker started, would be reused here and fail every write
+                    var cnStringBuilder = new SqliteConnectionStringBuilder(_options.SqliteConnectionString) { Pooling = false };
 
                     if (PgFreshCacheOptions.IsMemoryConnection(cnStringBuilder))
                     {
@@ -60,7 +63,7 @@ namespace PgFreshCache.Lite
                         memoryConnection = await EnsureMemoryConnectionAsync(memoryConnection, cnStringBuilder, stoppingToken).ConfigureAwait(false);
                     }
 
-                    await EnsureDatabaseCreatedAsync(stoppingToken).ConfigureAwait(false);
+                    await EnsureDatabaseCreatedAsync(cnStringBuilder, stoppingToken).ConfigureAwait(false);
 
                     var builder = PgOutput2JsonBuilder.Create()
                         .WithLoggerFactory(_loggerFactory)
@@ -68,13 +71,7 @@ namespace PgFreshCache.Lite
                         .WithPgPublications([.. _options.PublicationNames])
                         .WithPgReplicationSlot(_options.ReplicationSlotName, _options.UseTemporaryReplicationSlot)
                         .WithInitialDataCopy(true)
-                        .UseSqlite(options =>
-                        {
-                            options.ConnectionStringBuilder = cnStringBuilder;
-                            options.UseWal = _options.UseWal;
-                            options.WalCheckpointTryCount = _options.WalCheckpointTryCount;
-                            options.WalCheckpointType = _options.WalCheckpointType;
-                        });
+                        .UseSqlite(options => ConfigureSqlite(options, _options, cnStringBuilder));
 
                     using var pgOutput2Json = builder.Build();
 
@@ -95,11 +92,27 @@ namespace PgFreshCache.Lite
             memoryConnection?.Dispose();
         }
 
-        private async Task EnsureDatabaseCreatedAsync(CancellationToken stoppingToken)
+        internal static void ConfigureSqlite(SqlitePublisherOptions options, PgFreshCacheOptions cacheOptions, SqliteConnectionStringBuilder cnStringBuilder)
+        {
+            options.ConnectionStringBuilder = cnStringBuilder;
+            options.UseWal = cacheOptions.UseWal;
+            options.WalCheckpointTryCount = cacheOptions.WalCheckpointTryCount;
+            options.WalCheckpointType = cacheOptions.WalCheckpointType;
+
+            // the store keeps its position under this name: a cache has one source and one slot
+            options.SubscriptionName = cacheOptions.ReplicationSlotName;
+
+            // the tables are created from the DbContext model (EnsureCreated), and SQLite has no schemas: the EF provider
+            // ignores the schema of an entity, so its table is the table name alone, and the rows must go there.
+            // Two published tables with the same name in different schemas are an error of PgOutput2Json
+            options.GetTableName = (schemaName, tableName) => tableName;
+        }
+
+        private async Task EnsureDatabaseCreatedAsync(SqliteConnectionStringBuilder cnStringBuilder, CancellationToken stoppingToken)
         {
             using var db = await _dbContextFactory.CreateDbContextAsync(stoppingToken).ConfigureAwait(false);
 
-            using var connection = new SqliteConnection(_options.SqliteConnectionString);
+            using var connection = new SqliteConnection(cnStringBuilder.ConnectionString);
             
             await connection.OpenAsync(stoppingToken).ConfigureAwait(false);
 

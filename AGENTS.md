@@ -15,8 +15,8 @@ dotnet test PgFreshCache.Tests/PgFreshCache.Tests.csproj
 dotnet test PgFreshCache.IntegrationTests/PgFreshCache.IntegrationTests.csproj
 ```
 
-The library targets `net8.0`, `net9.0` and `net10.0`: EF Core 9 on net8.0/net9.0, EF Core 10 on net10.0. The test projects target
-net8.0 and net10.0 to cover both. CI (`.github/workflows/tests.yml`) runs both test projects on every pull request and on `main`,
+The library targets `net8.0`, `net9.0`, `net10.0` and `net11.0`: EF Core 9 on net8.0/net9.0, EF Core 10 on net10.0, EF Core 11
+on net11.0. The test projects target net8.0, net10.0 and net11.0 to cover all three. CI (`.github/workflows/tests.yml`) runs both test projects on every pull request and on `main`,
 and the integration tests a second time with `TZ=Europe/Zagreb`, since the runners are on UTC. `TreatWarningsAsErrors` is on.
 
 PgFreshCache is a layer over [PgOutput2Json](https://github.com/PgOutput2Json/PgOutput2Json) (`PgOutput2Json.Sqlite`): test what
